@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-header">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>Analysis Report</h1>
+            <p class="text-secondary">Detailed breakdown for {{ analysis.url }}</p>
+        </div>
+        <div class="score-large-badge" style="--score-deg: {{ analysis.geo_score * 3.6 }}deg">
+            <div class="score-number">{{ analysis.geo_score }}</div>
+            <div class="score-label">GEO Score</div>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <!-- Gap Analysis -->
+    <div class="card analysis-card">
+        <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-microscope"></i> Gap Analysis</div>
+        </div>
+        <div class="card-content">
+            {{ analysis.gap_analysis | safe }}
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="card recommendations-card">
+        <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-list-check"></i> Recommendations</div>
+        </div>
+        <div class="card-content">
+            {% for rec in analysis.recommendations %}
+            <div class="rec-item">
+                <div class="rec-number">{{ loop.index }}</div>
+                <div>{{ rec.text }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Search Simulation -->
+    <div class="card simulation-card" style="grid-column: span 12;">
+        <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-robot"></i> AI Search Simulation</div>
+        </div>
+        <div class="simulation-grid">
+            {% for sim in analysis.simulations %}
+            <div class="simulation-box">
+                <div class="sim-header">
+                    <span class="sim-engine">{{ sim.engine }}</span>
+                    <span class="sim-score">Visibility: {{ sim.visibility_score }}%</span>
+                </div>
+                <div class="sim-query">
+                    <i class="fa-solid fa-magnifying-glass"></i> "{{ sim.query_used }}"
+                </div>
+                <div class="sim-text">
+                    {{ sim.simulation_text }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

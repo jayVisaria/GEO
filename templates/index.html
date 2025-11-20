@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEO - Generative Engine Optimization Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-cube"></i> GEO.ai
+            </div>
+            <nav>
+                <!-- Nav items if needed -->
+            </nav>
+        </header>
+
+        <main class="hero">
+            <h1>Optimize for the<br>AI Era</h1>
+            <p>Analyze your website's visibility in Generative Engines like ChatGPT, Gemini, and Perplexity.</p>
+            
+            <form action="/" method="POST" class="search-box" onsubmit="document.querySelector('.loader').style.display='block'; document.querySelector('.btn-text').style.display='none'">
+                <input type="text" name="url" class="url-input" placeholder="Enter website URL (e.g., pfizerforall.com)" required>
+                <button type="submit" class="analyze-btn">
+                    <span class="btn-text">Analyze</span>
+                    <div class="loader"></div>
+                </button>
+            </form>
+
+            {% if error %}
+            <div style="color: #ef4444; margin-top: 1rem; background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 8px;">
+                {{ error }}
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</body>
+</html>

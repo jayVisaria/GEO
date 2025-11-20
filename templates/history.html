@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-header">
+    <h1>Analysis History</h1>
+    <p>Archive of all past website scans.</p>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>URL</th>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Score</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for analysis in analyses %}
+            <tr>
+                <td>#{{ analysis.id }}</td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <img src="https://www.google.com/s2/favicons?domain={{ analysis.url }}" width="16" height="16">
+                        <a href="{{ analysis.url }}" target="_blank" class="table-link">{{ analysis.url }}</a>
+                    </div>
+                </td>
+                <td>{{ analysis.title }}</td>
+                <td>{{ analysis.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    <span
+                        class="score-badge {% if analysis.geo_score >= 70 %}high{% elif analysis.geo_score >= 40 %}medium{% else %}low{% endif %}">
+                        {{ analysis.geo_score }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('report', analysis_id=analysis.id) }}" class="btn-sm">
+                        <i class="fa-solid fa-eye"></i> View Report
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

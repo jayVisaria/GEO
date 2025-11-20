@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-header">
+    <h1>Dashboard</h1>
+    <p>Overview of your Generative Engine Optimization performance.</p>
+</div>
+
+<!-- Quick Scan -->
+<div class="quick-scan-section">
+    <form action="{{ url_for('analyze') }}" method="POST" class="scan-form"
+        onsubmit="document.querySelector('.loader').style.display='inline-block'">
+        <input type="text" name="url" placeholder="Enter URL to analyze (e.g., pfizerforall.com)" required>
+        <button type="submit">
+            <span>Run Analysis</span>
+            <div class="loader"></div>
+        </button>
+    </form>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa;">
+            <i class="fa-solid fa-globe"></i>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value">{{ total_scans }}</div>
+            <div class="stat-label">Total Scans</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">
+            <i class="fa-solid fa-chart-bar"></i>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value">{{ avg_score }}</div>
+            <div class="stat-label">Avg. GEO Score</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">
+            <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value">High</div>
+            <div class="stat-label">Optimization Level</div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="section-header">
+    <h2>Recent Analyses</h2>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Date</th>
+                <th>Score</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for analysis in recent_analyses %}
+            <tr>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <img src="https://www.google.com/s2/favicons?domain={{ analysis.url }}" width="16" height="16">
+                        <a href="{{ analysis.url }}" target="_blank" class="table-link">{{ analysis.url }}</a>
+                    </div>
+                </td>
+                <td>{{ analysis.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    <span
+                        class="score-badge {% if analysis.geo_score >= 70 %}high{% elif analysis.geo_score >= 40 %}medium{% else %}low{% endif %}">
+                        {{ analysis.geo_score }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('report', analysis_id=analysis.id) }}" class="btn-sm">
+                        <i class="fa-solid fa-eye"></i> View Report
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-secondary);">No analyses yet. Start one
+                    above!</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
